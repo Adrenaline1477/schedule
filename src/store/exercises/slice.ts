@@ -1,12 +1,12 @@
 import { ExerciseListType } from '@/types/workout';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import { changeExerciseAsync } from './asyncActions';
 import { WorkoutState } from './types';
 
 const initialState: WorkoutState = {
     exerciseList: {},
 };
-
 const exerciseSlice = createSlice({
     name: 'exercise',
     initialState,
@@ -27,6 +27,9 @@ const exerciseSlice = createSlice({
             const { category, updatedExerciseCategory } = action.payload;
             state.exerciseList[category] = updatedExerciseCategory;
         },
+    },
+    extraReducers: (builder) => {
+        builder.addCase(changeExerciseAsync.pending, () => {});
     },
 });
 

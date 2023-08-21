@@ -10,22 +10,18 @@ import { updateExerciseInWorkoutOnCalendarAsync } from '@/store/workout-on-calen
 import { SetsType } from '@/types/workout';
 
 import styles from './index.module.scss';
-
 interface IState {
     weight: number;
     amount: number;
     editWeight: boolean;
     editAmount: boolean;
 }
-
 type SetProps = {
     set: SetsType;
     index: number;
     removeSet: (setIndex: number) => void;
 };
-
 const cx = cnBind.bind(styles);
-
 export const Set: FC<SetProps> = ({ set, index, removeSet }) => {
     const [state, setState] = useState<IState>({
         weight: set.weight,
@@ -34,9 +30,12 @@ export const Set: FC<SetProps> = ({ set, index, removeSet }) => {
         editAmount: false,
     });
     const { weight, amount, editWeight, editAmount } = state;
-
     const dispatch = useAppDispatch();
     const selectExercise = useAppSelector(selectExerciseById);
+
+    if (!selectExercise) {
+        return null;
+    }
 
     const deactivateEditMode = () => {
         const newSets = selectExercise.sets.map((set, i) => (i === index ? { amount, weight } : set));
@@ -53,9 +52,7 @@ export const Set: FC<SetProps> = ({ set, index, removeSet }) => {
             editAmount: false,
         }));
     };
-
     const cn = cx('crossWrapper', { disabled: selectExercise.sets.length === 1 });
-
     return (
         <li className={styles.block}>
             <div className={styles.groupLeft}>

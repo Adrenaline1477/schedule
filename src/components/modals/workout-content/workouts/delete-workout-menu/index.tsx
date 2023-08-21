@@ -4,23 +4,21 @@ import { useSnackbar } from 'notistack';
 
 import { ButtonStandard } from '@/components/buttons/button-standard';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux-hook';
-import { setModalWorkoutIsOpen } from '@/store/modal/slice';
 import { deleteWorkoutFromCalendarAsync } from '@/store/workout-on-calendar/asyncActions';
 import { selectIsLoadingWorkoutsCalendar } from '@/store/workout-on-calendar/selectors';
 import { DELETE_WORKOUT_FROM_CALENDAR } from '@/types/workout';
 
 import styles from './index.module.scss';
-
 type DeleteModalPropsType = {
     workoutId: string;
     deleteModalToggler: () => void;
+    onDelete: () => void;
 };
 
 type ChoiceItemType = {
     name: string;
     type: DELETE_WORKOUT_FROM_CALENDAR;
 };
-
 const choiceList: ChoiceItemType[] = [
     { name: 'Только одну', type: DELETE_WORKOUT_FROM_CALENDAR.ONLY_ONE },
     {
@@ -31,17 +29,16 @@ const choiceList: ChoiceItemType[] = [
 
 const cx = cnBind.bind(styles);
 
-export const DeleteWorkoutMenu: FC<DeleteModalPropsType> = ({ workoutId, deleteModalToggler }) => {
+export const DeleteWorkoutMenu: FC<DeleteModalPropsType> = ({ workoutId, deleteModalToggler, onDelete }) => {
     const [deleteType, setDeleteType] = useState(DELETE_WORKOUT_FROM_CALENDAR.ONLY_ONE);
 
     const dispatch = useAppDispatch();
     const { enqueueSnackbar } = useSnackbar();
-
     const isLoadingWorkoutsCalendar = useAppSelector(selectIsLoadingWorkoutsCalendar);
     const deleteWorkoutClickHandler = async () => {
         await dispatch(deleteWorkoutFromCalendarAsync(workoutId, deleteType, enqueueSnackbar));
         deleteModalToggler();
-        dispatch(setModalWorkoutIsOpen(false));
+        onDelete();
     };
 
     const cn = (choice: ChoiceItemType) => cx('item', { active: choice.type === deleteType });

@@ -7,20 +7,19 @@ import { BasicExercise, EXERCISE_CATEGORY } from '@/types/workout';
 import { HOW_TO_CHANGE_EXERCISE } from '@/types/workout';
 import { getCategoryExercise } from '@/utils/exercise';
 import { getCurrentUserId } from '@/utils/user';
-import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { RootState } from '..';
+import { createAppThunk } from '../utils/thunk';
 
 import { ExerciseDataThunk } from './types';
 
-export const changeExerciseAsync = createAsyncThunk(
+export const changeExerciseAsync = createAppThunk(
     'exercise/changeExercise',
     async (exerciseData: ExerciseDataThunk, { getState, dispatch }) => {
         const { exercise, howToChange } = exerciseData;
         const uid = getCurrentUserId(getState);
         const {
             exercise: { exerciseList },
-        } = getState() as RootState;
+        } = getState();
         const category = getCategoryExercise(exercise.category as EXERCISE_CATEGORY);
         try {
             const exerciseListDoc = await getDocs(query(collection(db, `users/${uid}/exerciseList`)));
@@ -49,7 +48,7 @@ export const changeExerciseAsync = createAsyncThunk(
                     dispatch(updateExercise({ updatedExerciseCategory, category }));
                     return;
             }
-        } catch ({ message }) {
+        } catch ({ message }: any) {
             console.log(message);
         }
     },

@@ -4,7 +4,7 @@ import { AiOutlineCloseSquare } from 'react-icons/ai';
 
 import { useAppDispatch, useAppSelector } from '@/hooks/redux-hook';
 import { selectSelectedDay } from '@/store/modal/selectors';
-import { setStepWorkoutModal, setTempIdWorkout } from '@/store/modal/slice';
+import { openWorkoutModal } from '@/store/modal/slice';
 import { selectWorkoutsForCalendar } from '@/store/workout-on-calendar/selectors';
 import { STEP_MODAL } from '@/types/other';
 import { getWorkoutForTheDay } from '@/utils/workout';
@@ -14,7 +14,6 @@ import styles from './index.module.scss';
 type WorkoutListPropsType = {
     deleteWorkoutClickHandler: (workoutId: string) => void;
 };
-
 export const WorkoutsList: FC<WorkoutListPropsType> = ({ deleteWorkoutClickHandler }) => {
     const dispatch = useAppDispatch();
     const daySelected = useAppSelector(selectSelectedDay);
@@ -22,16 +21,15 @@ export const WorkoutsList: FC<WorkoutListPropsType> = ({ deleteWorkoutClickHandl
 
     const workoutsOnCalendarArr = _.toArray(workoutsOnCalendar);
 
-    const workoutsForTheDay = getWorkoutForTheDay(daySelected, workoutsOnCalendarArr);
+    const workoutsForTheDay = daySelected ? getWorkoutForTheDay(daySelected, workoutsOnCalendarArr) : undefined;
 
     const workoutClickHandler = (id: string) => {
-        dispatch(setStepWorkoutModal(STEP_MODAL.EXERCISES));
-        dispatch(setTempIdWorkout(id));
+        dispatch(openWorkoutModal({ step: STEP_MODAL.EXERCISES, selectedExerciseId: id }));
     };
 
     return (
         <div className={styles.list}>
-            {_.isEmpty(workoutsForTheDay) ? (
+            {!workoutsForTheDay || _.isEmpty(workoutsForTheDay) ? (
                 <p>Нет активных тренировок</p>
             ) : (
                 <ul>

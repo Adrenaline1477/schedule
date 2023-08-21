@@ -2,12 +2,10 @@ import { ExerciseInWorkoutOnCalendar, WorkoutOnCalendar } from '@/types/workout'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { WorkoutCalendarState } from './types';
-
 const initialState: WorkoutCalendarState = {
     workoutsOnTheCalendar: {},
     isLoading: false,
 };
-
 const workoutsCalendarSlice = createSlice({
     name: 'workoutCalendar',
     initialState,
@@ -49,7 +47,6 @@ const workoutsCalendarSlice = createSlice({
         },
     },
 });
-
 export const {
     setIsLoadingWorkoutCalendar,
     addWorkoutToCalendar,
@@ -59,4 +56,5 @@ export const {
     deleteSomeWorkoutFromCalendar,
     updateExerciseInWorkoutOnCalendar,
 } = workoutsCalendarSlice.actions;
-export default workoutsCalendarSlice.reducer;
+export const workoutCalendarActions = workoutsCalendarSlice.actions;
+export const workoutsCalendarReducer = workoutsCalendarSlice.reducer;

@@ -4,18 +4,19 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { db } from '@/firebase';
 import { IReview } from '@/types/other';
-import { createAsyncThunk } from '@reduxjs/toolkit';
+
+import { createAppThunk } from '../utils/thunk';
 
 import { reviewsFetchComplete, setIsLoadingReview } from './slice';
 import { ReviewsDataThunk } from './types';
 
-export const addReviewAsync = createAsyncThunk(
+export const addReviewAsync = createAppThunk(
     'reviews/addReview',
     async (reviewsData: ReviewsDataThunk, { dispatch, getState }) => {
         const { message, rating, enqueueSnackbar } = reviewsData;
         const {
             user: { user },
-        } = getState() as any;
+        } = getState();
         const id = uuidv4();
         const reviewData: IReview = {
             message,
@@ -23,6 +24,7 @@ export const addReviewAsync = createAsyncThunk(
             id,
             img: user!.photoURL,
             name: user!.displayName,
+            // @ts-expect-error
             createdAccountAt: user!.reloadUserInfo.createdAt,
             createdReviewAt: dayjs().valueOf().toString(),
         };
@@ -42,7 +44,7 @@ export const addReviewAsync = createAsyncThunk(
     },
 );
 
-export const loadReviewsData = createAsyncThunk('reviews/fetchReviews', async (_, { dispatch }) => {
+export const loadReviewsData = createAppThunk('reviews/fetchReviews', async (_, { dispatch }) => {
     try {
         const reviewsDataSnap = await getDoc(doc(db, `userReviews/reviewsList`));
         const reviewsData: IReview[] = reviewsDataSnap.data()!.reviews;

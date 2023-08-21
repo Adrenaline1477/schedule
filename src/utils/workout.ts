@@ -6,10 +6,8 @@ import { DAY_FORMAT } from '@/types/other';
 import { ExerciseInWorkoutOnCalendar, HOW_TO_REPEAT, UserWorkoutsStateType, WorkoutOnCalendar } from '@/types/workout';
 
 import { convertDateToNumber, getMonthMatrix } from './dayjs';
-
 type GenerateWorkout = (daySelected: string, workout: WorkoutOnCalendar) => WorkoutOnCalendar;
 type GetWorkoutsIdToDelete = (workoutsOnTheCalendar: UserWorkoutsStateType, id: string) => string[];
-
 export const generateWorkout: GenerateWorkout = (daySelected, workout) => {
     const arrExercise = _.toArray(workout.exercises) as ExerciseInWorkoutOnCalendar[];
     const exercises: { [k: string]: ExerciseInWorkoutOnCalendar } = {};
@@ -28,7 +26,6 @@ export const generateWorkout: GenerateWorkout = (daySelected, workout) => {
     };
     return workoutData;
 };
-
 export const generateArrWorkoutsForCalendar = (workout: WorkoutOnCalendar, workoutDates: string[]) => {
     return workoutDates.map((date) => {
         return {
@@ -39,7 +36,6 @@ export const generateArrWorkoutsForCalendar = (workout: WorkoutOnCalendar, worko
         };
     });
 };
-
 export const getArrWorkoutsIdToDelete: GetWorkoutsIdToDelete = (workoutsOnTheCalendar, id) => {
     const selectWorkout = workoutsOnTheCalendar[id];
     const selectWorkoutDate = convertDateToNumber(selectWorkout.date!);
@@ -50,7 +46,6 @@ export const getArrWorkoutsIdToDelete: GetWorkoutsIdToDelete = (workoutsOnTheCal
         })
         .map((filterWorkout) => filterWorkout.id);
 };
-
 export const getWorkoutsDates = (type: HOW_TO_REPEAT, workout: WorkoutOnCalendar, repeatInterval?: number) => {
     const workoutDate = workout.date;
     const dateArr: string[] = [];
@@ -75,17 +70,23 @@ export const getWorkoutsDates = (type: HOW_TO_REPEAT, workout: WorkoutOnCalendar
 };
 
 export const getWorkoutsForMonth = (workouts: UserWorkoutsStateType, monthIndex: number) => {
-    const monthDates = getMonthMatrix(monthIndex)
-        .map((row) => row.map((day) => day.format(DAY_FORMAT.YYYY_MM_DD)))
-        .flat(1);
-    return _.toArray(workouts).filter((workout) => monthDates.find((date) => date === workout.date));
+    const result: WorkoutOnCalendar[] = [];
+    const monthDate = dayjs().month(monthIndex);
+
+    for (const key in workouts) {
+        const workout = workouts[key];
+        if (monthDate.isSame(dayjs(workout.date), 'month')) {
+            result.push(workout);
+        }
+    }
+
+    return result;
 };
 
 export const getWorkoutForTheDay = (date: string, workoutsForMonth: WorkoutOnCalendar[]) => {
     const filterWorkout = workoutsForMonth.filter((workout) => workout.date === date);
     return sortWorkoutByAddingTime(filterWorkout);
 };
-
 export const sortWorkoutByAddingTime = (workout: WorkoutOnCalendar[]) => {
     return workout.sort((a, b) => dayjs(a.addingTime).valueOf() - dayjs(b.addingTime).valueOf());
 };
