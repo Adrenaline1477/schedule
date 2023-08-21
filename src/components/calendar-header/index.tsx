@@ -1,6 +1,8 @@
 import { memo } from 'react';
-import { MdArrowBackIosNew, MdArrowForwardIos } from 'react-icons/md';
 
+// import { MdArrowBackIosNew, MdArrowForwardIos } from 'react-icons/md';
+import left_arrow from '@/assets/img/left_arrow.svg';
+import right_arrow from '@/assets/img/right_arrow.svg';
 import { ButtonOutline } from '@/components/buttons/button-outline';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux-hook';
 import { openWorkoutModal } from '@/store/modal/slice';
@@ -21,20 +23,19 @@ export const CalendarHeader = memo(() => {
     return (
         <>
             <div className={styles.wrapper}>
-                <div className={styles.wrapperGroupBtn}>
+                {/* <div className={styles.wrapperGroupBtn}>
                     <div className={styles.btnWrapper} onMouseDown={() => dispatch(resetMonthIndex())}>
                         <ButtonOutline text="Тренировка на сегодня" handleClick={workoutForDayClickHandler} />
                     </div>
-                </div>
+                </div> */}
                 <div className={styles.wrapperGroupBtn}>
-                    <div className={styles.btnWrapper}>
-                        <ButtonOutline text="Сегодня" handleClick={() => dispatch(resetMonthIndex())} />
-                    </div>
                     <button className={styles.btn} onClick={() => dispatch(decMonthIndex())}>
-                        <MdArrowBackIosNew />
+                        {/* <MdArrowBackIosNew /> */}
+                        <img src={left_arrow} alt="" />
                     </button>
                     <button className={styles.btn} onClick={() => dispatch(incMonthIndex())}>
-                        <MdArrowForwardIos />
+                        {/* <MdArrowForwardIos /> */}
+                        <img src={right_arrow} alt="" />
                     </button>
                     <h3 className={styles.data}>{getYear(monthIndex)}</h3>
                 </div>

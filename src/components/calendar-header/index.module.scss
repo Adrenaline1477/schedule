@@ -11,31 +11,31 @@
     .wrapperGroupBtn {
         display: flex;
         align-items: center;
-        margin: 5px 0;
-        .btnWrapper {
-            margin-right: 5px;
-        }
+        gap: 60px;
+
         .btn {
             width: 35px;
             height: 35px;
             display: flex;
             align-items: center;
             justify-content: center;
+            border: 2px solid #a1a1a1;
             border-radius: 50%;
             transition: all 0.2s linear;
-            margin-right: 7px;
             background-color: transparent;
             &:hover {
-                background-color: $lightGray;
+                background-color: #e8eeff;
             }
             &:last-child {
                 margin-right: 0;
             }
         }
         .data {
-            color: $textColor;
-            font-size: 20px;
-            margin-left: 10px;
+            color: #000a39;
+            text-align: center;
+            font-size: 26px;
+            font-weight: 700;
+            margin-left: 12em;
             @media (max-width: $tabletWidth) {
                 font-size: 16px;
             }

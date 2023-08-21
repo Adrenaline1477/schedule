@@ -1,15 +1,19 @@
 @import '../../variables.scss';
 .wrapper {
     border: 1px solid $borderColor;
-    height: calc(((100vh - $headerHeight - $calendarHeaderHeight) - 10px) / 6);
+    border-radius: 5px;
+    height: 100px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     padding: 5px;
     cursor: pointer;
     transition: background-color 0.2s linear;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+
     &:hover {
-        background-color: $lightGray;
+        background-color: #e8eeff;
     }
     @media (max-width: $tabletWidth) {
         padding: 2px;
@@ -22,26 +26,31 @@
 .dayHeader {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    font-size: 26px;
     @media (max-width: $mobileWidth) {
         flex-direction: row;
     }
     @media (max-height: 950px) {
         flex-direction: row;
     }
-    .dayWeek {
-        @media (max-width: $tabletWidth) {
-            font-size: 10px;
-            margin-right: 0;
-        }
-        @media (max-height: 950px) {
-            margin-right: 20px;
-        }
-        @media (max-width: $mobileWidth) {
-            margin-right: 10px;
-        }
-    }
+    // .dayWeek {
+    //     color: #656565;
+
+    //     @media (max-width: $tabletWidth) {
+    //         font-size: 10px;
+    //         margin-right: 0;
+    //     }
+    //     @media (max-height: 950px) {
+    //         margin-right: 20px;
+    //     }
+    //     @media (max-width: $mobileWidth) {
+    //         margin-right: 10px;
+    //     }
+    // }
     .number {
         margin-bottom: 5px;
+        color: #656565;
         @media (max-width: $tabletWidth) {
             font-size: 10px;
             margin: 0;
@@ -98,7 +107,15 @@
 //     background-color: $color4;
 // }
 .dayOfTheLastMonth {
-    background: repeating-linear-gradient(-45deg, #fff, #fff 20px, $lightGray 22px, $lightGray 10px);
-    color: #9d9d9d;
-    cursor: auto;
+    background-color: #d78db3;
+    // background: repeating-linear-gradient(-45deg, #fff, #fff 20px, $lightGray 22px, $lightGray 10px);
+    cursor: pointer;
+
+    span {
+        color: white !important;
+    }
+
+    &:hover {
+        background-color: #9d9d9d !important;
+    }
 }

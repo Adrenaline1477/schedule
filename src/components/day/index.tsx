@@ -72,7 +72,7 @@ export const Day: FC<DayProps> = ({ day, row, workoutsForMonth, monthIndex }) =>
         <>
             <div className={dayClasses} onClick={() => clickHandler('day')} ref={dayRef}>
                 <div className={styles.dayHeader}>
-                    {row === 0 && <span className={styles.dayWeek}>{day.format('dd').toUpperCase()}</span>}
+                    {/* {row === 0 && <span className={styles.dayWeek}>{day.format('dd').toUpperCase()}</span>} */}
                     <span className={styles.number}>{day.format('DD')}</span>
                 </div>
                 <div className={styles.workoutList}>
