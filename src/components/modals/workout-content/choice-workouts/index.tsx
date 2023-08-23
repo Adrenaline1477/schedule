@@ -95,8 +95,8 @@ export const ChoiceWorkouts = () => {
                         <ButtonStandard
                             handleClick={addWorkoutOnCalendarClickHandler}
                             name={'Добавить'}
-                            disabled={!selectWorkout}
-                            isLoading={isLoadingWorkoutCalendar}
+                            // disabled={!selectWorkout}
+                            // isLoading={isLoadingWorkoutCalendar}
                         />
                     </>
                 )}

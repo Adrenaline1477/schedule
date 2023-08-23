@@ -17,7 +17,7 @@ export const ButtonStandard: FC<ButtonStandardPropsType> = ({ handleClick, name,
         <button
             className={styles.btn}
             onClick={() => handleClick && handleClick()}
-            disabled={disabled || isLoading}
+            // disabled={disabled || isLoading}
             type={type && type}
         >
             {isLoading && (

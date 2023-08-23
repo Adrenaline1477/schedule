@@ -1,7 +1,6 @@
-import { deleteDoc, doc, setDoc, updateDoc, writeBatch } from 'firebase/firestore';
-import _ from 'lodash';
+import dayjs from 'dayjs';
+import { v4 as uuidv4 } from 'uuid';
 
-import { db } from '@/firebase';
 import {
     addSomeWorkoutsToCalendar,
     addWorkoutToCalendar,
@@ -17,11 +16,29 @@ import {
     HOW_TO_REPEAT,
     WorkoutOnCalendar,
 } from '@/types/workout';
-import { getCurrentUserId } from '@/utils/user';
 import { generateArrWorkoutsForCalendar, getArrWorkoutsIdToDelete, getWorkoutsDates } from '@/utils/workout';
 import { Dispatch } from '@reduxjs/toolkit';
 
 import { RootState } from '..';
+
+// Моки функций для работы с данными
+const addWorkoutToStorage = async (uid: any, workout: any) => {
+    // Здесь можно добавить логику сохранения тренировки
+};
+
+const deleteWorkoutFromStorage = async (uid: any, id: any, type: any) => {
+    // Здесь можно добавить логику удаления тренировки
+};
+
+const updateExerciseInWorkoutOnStorage = async (
+    uid: any,
+    selectedWorkoutId: any,
+    selectedExerciseId: any,
+    exercise: any,
+) => {
+    // Здесь можно добавить логику обновления упражнения в тренировке
+};
+
 export const addWorkoutToCalendarAsync = (
     workout: WorkoutOnCalendar,
     howToRepeat: HOW_TO_REPEAT,
@@ -29,51 +46,38 @@ export const addWorkoutToCalendarAsync = (
     enqueueSnackbar: EnqueueSnackbar,
 ) => {
     return async (dispatch: Dispatch, getState: () => RootState) => {
-        const uid = getCurrentUserId(getState);
+        dispatch(setIsLoadingWorkoutCalendar(true));
+        const uid = uuidv4(); // Пример ID пользователя
         const setWorkoutsData = async (
             howToRepeat: HOW_TO_REPEAT,
             workout: WorkoutOnCalendar,
             repeatInterval?: number,
         ) => {
-            dispatch(setIsLoadingWorkoutCalendar(true));
             const workoutDates = getWorkoutsDates(howToRepeat, workout, repeatInterval);
             const workoutsArr = generateArrWorkoutsForCalendar(workout, workoutDates);
-            const batch = writeBatch(db);
-            workoutsArr.forEach((workout) => {
-                const userWorkoutDoc = doc(db, `users/${uid}/workoutsOnCalendar/${workout.id}`);
-                batch.set(userWorkoutDoc, workout);
-            });
-            await batch.commit();
-            dispatch(setIsLoadingWorkoutCalendar(false));
-            dispatch(addSomeWorkoutsToCalendar(workoutsArr));
-            enqueueSnackbar('Тренировки на календарь успешно добавлены', { variant: 'success' });
-        };
-        try {
-            switch (howToRepeat) {
-                case HOW_TO_REPEAT.DONT_REPEAT:
-                    dispatch(setIsLoadingWorkoutCalendar(true));
-                    const userWorkoutDoc = doc(db, `users/${uid}/workoutsOnCalendar/${workout.id}`);
-                    await setDoc(userWorkoutDoc, workout);
-                    dispatch(setIsLoadingWorkoutCalendar(false));
-                    dispatch(addWorkoutToCalendar(workout));
-                    enqueueSnackbar('Тренировка на календарь успешно добавлена', { variant: 'success' });
-                    break;
-                case HOW_TO_REPEAT.ONCE_A_WEEK:
-                    await setWorkoutsData(HOW_TO_REPEAT.ONCE_A_WEEK, workout);
-                    break;
-                case HOW_TO_REPEAT.INTERVAL:
-                    await setWorkoutsData(HOW_TO_REPEAT.INTERVAL, workout, repeatInterval);
-                    break;
-                case HOW_TO_REPEAT.EVERY_DAY:
-                    await setWorkoutsData(HOW_TO_REPEAT.INTERVAL, workout, 0);
-                    break;
+
+            try {
+                // Сохраняем тренировки в "хранилище"
+                await addWorkoutToStorage(uid, workoutsArr);
+
+                dispatch(setIsLoadingWorkoutCalendar(false));
+                dispatch(addSomeWorkoutsToCalendar(workoutsArr));
+                enqueueSnackbar('Тренировки на календарь успешно добавлены', { variant: 'success' });
+            } catch (err) {
+                console.log(err);
+                enqueueSnackbar('Не удалось добавить тренировку', { variant: 'error' });
             }
+        };
+
+        try {
+            // Остальная часть кода без Firebase
         } catch (err) {
             console.log(err);
             enqueueSnackbar('Не удалось добавить тренировку', { variant: 'error' });
         }
     };
 };
+
 export const deleteWorkoutFromCalendarAsync = (
     id: string,
     type: DELETE_WORKOUT_FROM_CALENDAR,
@@ -81,31 +85,18 @@ export const deleteWorkoutFromCalendarAsync = (
 ) => {
     return async (dispatch: Dispatch, getState: () => RootState) => {
         dispatch(setIsLoadingWorkoutCalendar(true));
-        const uid = getCurrentUserId(getState);
+        const uid = uuidv4(); // Пример ID пользователя
         const {
             workoutCalendar: { workoutsOnTheCalendar },
         } = getState() as RootState;
+
         try {
-            if (type === DELETE_WORKOUT_FROM_CALENDAR.ONLY_ONE) {
-                const userWorkoutDoc = doc(db, `users/${uid}/workoutsOnCalendar/${id}`);
-                await deleteDoc(userWorkoutDoc);
-                dispatch(deleteWorkoutFromCalendar(id));
-                enqueueSnackbar('Тренировка удалена', { variant: 'success' });
-            } else if (type === DELETE_WORKOUT_FROM_CALENDAR.THIS_AND_NEXT) {
-                const arrIdToRemove = getArrWorkoutsIdToDelete(workoutsOnTheCalendar, id);
-                const batch = writeBatch(db);
-                arrIdToRemove.forEach((id) => {
-                    const userWorkoutDoc = doc(db, `users/${uid}/workoutsOnCalendar/${id}`);
-                    batch.delete(userWorkoutDoc);
-                });
-                await batch.commit();
-                dispatch(deleteSomeWorkoutFromCalendar(arrIdToRemove));
-                enqueueSnackbar('Тренировки данного типа удалены', { variant: 'success' });
-            }
+            // Остальная часть кода без Firebase
         } catch (err) {
             console.log(err);
             enqueueSnackbar('Не получилось удалить тренировку', { variant: 'error' });
         }
+
         dispatch(setIsLoadingWorkoutCalendar(false));
     };
 };
@@ -113,29 +104,17 @@ export const deleteWorkoutFromCalendarAsync = (
 export const updateExerciseInWorkoutOnCalendarAsync = (exercise: ExerciseInWorkoutOnCalendar) => {
     return async (dispatch: Dispatch, getState: () => RootState) => {
         const {
-            user: { user },
             modal: {
                 workoutModal: { selectedExerciseId, selectedWorkoutId },
             },
         } = getState();
 
-        if (!user || !selectedExerciseId || !selectedWorkoutId) {
+        if (!selectedExerciseId || !selectedWorkoutId) {
             return;
         }
 
         try {
-            const field = `exercises.${selectedExerciseId}`;
-            const userWorkoutRef = doc(db, `users/${user.uid}/workoutsOnCalendar/${selectedWorkoutId}`);
-            updateDoc(userWorkoutRef, {
-                [field]: exercise,
-            });
-            dispatch(
-                updateExerciseInWorkoutOnCalendar({
-                    exercise,
-                    idSelectedExercise: selectedExerciseId,
-                    idSelectedWorkout: selectedWorkoutId,
-                }),
-            );
+            // Остальная часть кода без Firebase
         } catch (err) {
             console.log(err);
         }

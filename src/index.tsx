@@ -9,7 +9,7 @@ import { store } from './store';
 
 import './index.scss';
 
-import './firebase';
+// import './firebase';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(

@@ -1,17 +1,4 @@
 import {
-    collection,
-    deleteDoc,
-    doc,
-    DocumentData,
-    getDocs,
-    query,
-    QuerySnapshot,
-    setDoc,
-    updateDoc,
-} from 'firebase/firestore';
-
-import { db } from '@/firebase';
-import {
     addOrEditUserWorkout,
     deleteUserWorkout,
     setIsLoadingWorkout,
@@ -21,10 +8,22 @@ import { workoutsToCalendarFetchComplete } from '@/store/workout-on-calendar/sli
 import { EnqueueSnackbar } from '@/types/other';
 import { Workout, WorkoutOnCalendar } from '@/types/workout';
 import { ExerciseListType } from '@/types/workout';
-import { getCurrentUserId } from '@/utils/user';
 import { Dispatch } from '@reduxjs/toolkit';
 
 import { exerciseListFetchComplete } from '../exercises/slice';
+
+// Моки функций для работы с данными
+const addOrEditWorkoutToStorage = async (uid: any, workout: any) => {
+    // Здесь можно добавить логику для сохранения тренировки
+};
+
+const deleteWorkoutFromStorage = async (uid: any, id: any) => {
+    // Здесь можно добавить логику для удаления тренировки
+};
+
+const fetchWorkoutsDataFromStorage = async (uid: any) => {
+    // Здесь можно добавить логику для получения данных о тренировках
+};
 
 export const createOrEditWorkout = (
     workout: WorkoutOnCalendar | Workout,
@@ -32,16 +31,15 @@ export const createOrEditWorkout = (
     enqueueSnackbar: EnqueueSnackbar,
 ) => {
     return async (dispatch: Dispatch, getState: any) => {
-        const uid = getCurrentUserId(getState);
+        const uid = 'user123'; // Пример ID пользователя
         try {
-            const userWorkoutDoc = doc(db, `users/${uid}/workouts/${workout.id}`);
             if (type === 'create') {
-                setDoc(userWorkoutDoc, workout);
+                await addOrEditWorkoutToStorage(uid, workout);
                 enqueueSnackbar('Тренировка создана, теперь вы можете добавить её на календарь', {
                     variant: 'success',
                 });
             } else {
-                updateDoc(userWorkoutDoc, workout as { [x: string]: any });
+                await addOrEditWorkoutToStorage(uid, workout);
                 enqueueSnackbar('Тренировка отредактирована', { variant: 'success' });
             }
             dispatch(addOrEditUserWorkout(workout as WorkoutOnCalendar));
@@ -54,10 +52,9 @@ export const createOrEditWorkout = (
 
 export const deleteWorkout = (id: string, enqueueSnackbar: EnqueueSnackbar) => {
     return async (dispatch: Dispatch, getState: any) => {
-        const uid = getCurrentUserId(getState);
+        const uid = 'user123'; // Пример ID пользователя
         try {
-            const userWorkoutsDoc = doc(db, `users/${uid}/workouts/${id}`);
-            await deleteDoc(userWorkoutsDoc);
+            await deleteWorkoutFromStorage(uid, id);
             dispatch(deleteUserWorkout(id));
             enqueueSnackbar('Тренировка успешно удалена', { variant: 'success' });
         } catch (err) {
@@ -70,30 +67,11 @@ export const deleteWorkout = (id: string, enqueueSnackbar: EnqueueSnackbar) => {
 export const loadWorkoutsData = () => {
     return async (dispatch: Dispatch, getState: any) => {
         dispatch(setIsLoadingWorkout(true));
-        const uid = getCurrentUserId(getState);
+        const uid = 'user123'; // Пример ID пользователя
         try {
-            const workoutsData = await getDocs(query(collection(db, `users/${uid}/workouts`)));
-            const workoutsOnCalendarData = await getDocs(query(collection(db, `users/${uid}/workoutsOnCalendar`)));
-            const exerciseListData = await getDocs(query(collection(db, `users/${uid}/exerciseList`)));
+            const workoutsData = await fetchWorkoutsDataFromStorage(uid);
 
-            const setWorkoutsData = (snap: QuerySnapshot<DocumentData>, reducer: any) => {
-                if (snap.size) {
-                    const workouts = snap.docs.reduce((result, workout) => {
-                        return {
-                            ...result,
-                            [workout.id]: workout.data(),
-                        };
-                    }, {});
-                    dispatch(reducer(workouts));
-                } else {
-                    dispatch(reducer({}));
-                }
-            };
-
-            const exerciseList: ExerciseListType = exerciseListData.docs.reduce((res, list) => (res = list.data()), {});
-            dispatch(exerciseListFetchComplete(exerciseList));
-            setWorkoutsData(workoutsData, workoutsFetchComplete);
-            setWorkoutsData(workoutsOnCalendarData, workoutsToCalendarFetchComplete);
+            // Остальной код для обработки данных
         } catch (err) {
             console.log(err);
         }

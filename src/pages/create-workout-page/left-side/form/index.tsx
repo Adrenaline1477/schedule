@@ -1,7 +1,7 @@
 import { FC, useContext, useState } from 'react';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 import { ButtonStandard } from '@/components/buttons/button-standard';
@@ -29,6 +29,11 @@ export const Form: FC<FormPropsType> = ({ clearTemporaryExercise, editableWorkou
     const dispatch = useAppDispatch();
 
     const navigate = useNavigate();
+
+    // const createWorkoutClickHandler = () => {
+    //     navigate(ROUTE_PATH.CREATE_WORKOUT);
+    //     // dispatch(closeWorkoutModal());
+    // };
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -112,9 +117,15 @@ export const Form: FC<FormPropsType> = ({ clearTemporaryExercise, editableWorkou
             <ButtonStandard
                 handleClick={() => {}}
                 name={editableWorkoutId ? 'Завершить редактирование' : 'Создать тренировку'}
-                disabled={temporaryExercise.length === 0}
+                // disabled={temporaryExercise.length === 0}
                 type="submit"
             />
+            <Link to={ROUTE_PATH.CALENDAR} className={styles.link}>
+                <button className={styles.homeButton}>На главную</button>
+            </Link>
+            {/* <a>
+                <button handleClick={createWorkoutClickHandler}></button>
+            </a> */}
         </form>
     );
 };
