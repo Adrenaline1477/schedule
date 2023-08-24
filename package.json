@@ -1,7 +1,7 @@
 {
   "name": "calendar_moi_grani",
   "homepage": "https://Xaky0105.github.com/gym-app",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": false,
   "dependencies": {
     "@craco/craco": "^7.0.0-alpha.8",
