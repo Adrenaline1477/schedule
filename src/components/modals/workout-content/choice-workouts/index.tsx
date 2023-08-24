@@ -96,7 +96,7 @@ export const ChoiceWorkouts = () => {
                             handleClick={addWorkoutOnCalendarClickHandler}
                             name={'Добавить'}
                             // disabled={!selectWorkout}
-                            // isLoading={isLoadingWorkoutCalendar}
+                            isLoading={isLoadingWorkoutCalendar}
                         />
                     </>
                 )}

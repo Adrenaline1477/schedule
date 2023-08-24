@@ -4,7 +4,6 @@ import { Provider } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
 
 import { AppRouter } from './app-router';
-import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import { store } from './store';
 
 import './index.scss';
@@ -21,5 +20,3 @@ root.render(
         </Provider>
     </SnackbarProvider>,
 );
-
-serviceWorkerRegistration.register();

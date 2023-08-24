@@ -8,7 +8,7 @@ import { ButtonStandard } from '@/components/buttons/button-standard';
 import { workoutColors } from '@/constants/constant';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux-hook';
 import { Context } from '@/pages/create-workout-page';
-import { createWorkoutScheme } from '@/scheme';
+// import { createWorkoutScheme } from '@/scheme';
 import { createOrEditWorkout } from '@/store/workout/asyncActions';
 import { selectWorkouts } from '@/store/workout/selectors';
 import { ROUTE_PATH } from '@/types/other';
@@ -53,7 +53,7 @@ export const Form: FC<FormPropsType> = ({ clearTemporaryExercise, editableWorkou
         initialValues: {
             workoutName: editableWorkoutId ? userWorkouts[editableWorkoutId].workoutName : '',
         },
-        validationSchema: createWorkoutScheme,
+        // validationSchema: createWorkoutScheme,
         onSubmit: (workoutName) => {
             const configUserWorkout = (id: string) => {
                 const exercises: { [k: string]: ExerciseInWorkout } = {};

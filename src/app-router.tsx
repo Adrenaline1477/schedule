@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 
-import { Layout } from '@/components/layouts';
+// import { Layout } from '@/components/layouts';
 // import { PrivateRoute } from '@/compound/privateRoute';
 import { privateRouteArr, publicRoutesArr } from '@/routes';
 
