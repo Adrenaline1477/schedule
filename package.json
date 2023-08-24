@@ -1,7 +1,7 @@
 {
   "name": "calendar_moi_grani",
   "homepage": "https://Xaky0105.github.com/gym-app",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": false,
   "dependencies": {
     "@emotion/react": "^11.10.4",
