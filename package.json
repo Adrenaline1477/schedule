@@ -4,7 +4,7 @@
   "version": "0.1.3",
   "private": false,
   "dependencies": {
-    "@craco/craco": "^7.0.0-alpha.8",
+    "@craco/craco": "^7.1.0",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@mui/icons-material": "^5.10.3",
