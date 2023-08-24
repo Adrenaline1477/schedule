@@ -1,8 +1,8 @@
 {
-  "name": "my-app",
+  "name": "calendar_moi_grani",
   "homepage": "https://Xaky0105.github.com/gym-app",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "dependencies": {
     "@craco/craco": "^7.0.0-alpha.8",
     "@emotion/react": "^11.10.4",
@@ -86,5 +86,16 @@
     "sass": "^1.55.0",
     "typescript": "^4.8.2",
     "webpack-bundle-analyzer": "^4.9.0"
-  }
+  },
+  "main": ".eslintrc.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Adrenaline1477/schedule.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Adrenaline1477/schedule/issues"
+  },
+  "description": ""
 }
